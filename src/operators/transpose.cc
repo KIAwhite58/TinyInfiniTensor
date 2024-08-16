@@ -30,8 +30,19 @@ namespace infini
         int rank = A->getRank();
 
         // =================================== 作业 ===================================
-        // TODO：修改 output_dim，返回正确的 transpose 后的 shape
-        // REF: https://onnx.ai/onnx/operators/onnx__Transpose.html#transpose-21
+       if (transposePermute.size() != rank) {
+            return std::nullopt; // 当 transposePermute 大小不匹配时，返回 nullopt
+        }
+
+        // 根据 permute 向量重排输出维度
+        for (int i = 0; i < rank; ++i)
+        {
+            if (transposePermute[i] < 0 || transposePermute[i] >= rank)
+            {
+                return std::nullopt; // 防止超出范围的索引
+            }
+            output_dim[i] = input_dim[transposePermute[i]];
+        }
         // =================================== 作业 ===================================
 
         return std::nullopt;
